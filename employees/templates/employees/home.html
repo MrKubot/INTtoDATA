@@ -1,0 +1,15 @@
+{% extends 'employees/base.html' %}
+
+
+{% block body %}
+
+<h1>All Employees:</h1>
+{% for employee in object_list %}
+<h3>
+    {{employee.id}}: <a href="{% url 'employees:employee_details' employee.id %}">{{employee}}</a> <br>
+</h3>   
+{% endfor %}
+
+<h4>Add new employee: <a href="{% url 'employees:add_employee' %}"><button type="button" class="btn btn-success">+</button></a></h4>
+
+{% endblock body %}
