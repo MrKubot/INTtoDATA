@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User, AbstractUser
 
 # Create your models here.
 
@@ -9,7 +10,7 @@ class Department(models.Model):
     def __str__(self) -> str:
         return self.name
 
-class Employee(models.Model):
+class Employee(AbstractUser):
 
     class EmployeeRole(models.TextChoices):
         DEFAULT = 'Default'
@@ -19,16 +20,20 @@ class Employee(models.Model):
         def __str__(self):
             return self
 
-    name = models.CharField(max_length=127, blank=False, null=False)
-    surname = models.CharField(max_length=127, blank=False, null=False)
+
+    username = models.CharField(max_length=127, blank=False, null=False, unique=True, default='DefaultUsername')
+    name = models.CharField(max_length=127, blank=False, null=True)
+    surname = models.CharField(max_length=127, blank=False, null=True)
     login = models.CharField(max_length=127, blank=False, null=False)
     password = models.CharField(max_length=1023, blank=False, null=False)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     employee_role = models.CharField(max_length=31, choices=EmployeeRole.choices, blank=False, null=False)
-    salary = models.DecimalField(max_digits=10, decimal_places=2)
+    salary = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
-    last_login_date = models.DateField(auto_now=True)
+    last_login_date = models.DateField(auto_now=True, null=True)
     created_date = models.DateField(auto_now_add=True)
+
+    REQUIRED_FIELDS = ['email', 'employee_role']
 
     def __str__(self):
         return f"{self.name} {self.surname} - {self.employee_role}"
